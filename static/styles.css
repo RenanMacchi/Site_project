@@ -61,3 +61,7 @@ body {
     transition: transform 0.3s;
 }
 
+.menu-closed #menu-icon {
+    transform: rotate(0deg);
+    transition: transform 0.3s;
+}
