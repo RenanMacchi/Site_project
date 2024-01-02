@@ -9,8 +9,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (menuHeader.classList.contains('menu-opened')) {
             mainMenu.style.display = 'block';
-            mainMenu.style.maxHeight = '500px'; // Adicione a altura máxima desejada (ajuste conforme necessário)
+            setTimeout(() => {
+                mainMenu.style.opacity = '1';
+                mainMenu.style.maxHeight = '500px';
+            }, 0);
         } else {
+            mainMenu.style.opacity = '0';
             mainMenu.style.maxHeight = '0';
             setTimeout(() => {
                 mainMenu.style.display = 'none';
@@ -22,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!menuContainer.contains(event.target)) {
             menuHeader.classList.remove('menu-opened');
             menuContainer.classList.add('menu-closed');
+            mainMenu.style.opacity = '0';
             mainMenu.style.maxHeight = '0';
             setTimeout(() => {
                 mainMenu.style.display = 'none';
@@ -32,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
     menuContainer.addEventListener('mouseleave', function () {
         menuHeader.classList.remove('menu-opened');
         menuContainer.classList.add('menu-closed');
+        mainMenu.style.opacity = '0';
         mainMenu.style.maxHeight = '0';
         setTimeout(() => {
             mainMenu.style.display = 'none';
@@ -41,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('scroll', function () {
         menuHeader.classList.remove('menu-opened');
         menuContainer.classList.add('menu-closed');
+        mainMenu.style.opacity = '0';
         mainMenu.style.maxHeight = '0';
         setTimeout(() => {
             mainMenu.style.display = 'none';
