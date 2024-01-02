@@ -1,0 +1,51 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    box-sizing: border-box;
+}
+
+/* Outros estilos aqui... */
+
+.menu-container {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+.menu-header {
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#menu-icon {
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+#main-menu {
+    display: none;
+    background-color: rgb(135, 156, 156);
+}
+
+#main-menu a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+}
+
+#main-menu a:hover {
+    background-color: #be1717;
+}
+
+/* Adicione este estilo para o menu aberto */
+.menu-opened #menu-icon {
+    transform: rotate(90deg);
+    transition: transform 0.3s;
+}
+

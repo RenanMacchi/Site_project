@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Minha Aplicação{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+<div class="menu-container">
+    <div class="menu-header">
+        <span id="menu-icon">&#9654;</span>
+        <span id="current-page">{% block page_title %}Home{% endblock %}</span>
+    </div>
+
+    <nav id="main-menu">
+        <a href="{{ url_for('index') }}">Página inicial</a>
+        <a href="{{ url_for('buscar') }}">Buscar</a>
+        <a href="{{ url_for('noticias') }}">Notícias</a>
+
+        {% if 'usuario_logado' in session %}
+            <a href="{{ url_for('perfil') }}">Meu Perfil</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
+        {% endif %}
+    </nav>
+</div>
+
+<!-- Conteúdo específico da página -->
+<section>
+    {% block content %}{% endblock %}
+</section>
+
+<script src="{{ url_for('static', filename='menu.js') }}"></script>
+</body>
+</html>
