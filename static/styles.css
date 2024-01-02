@@ -10,7 +10,7 @@ body {
 
 .menu-container {
     background-color: #333;
-    color: white;
+    color: rgb(68, 173, 86);
     padding: 10px;
     text-align: center;
     position: relative;
@@ -33,18 +33,21 @@ body {
 }
 
 #main-menu {
-    display: none;
-    background-color: rgb(135, 156, 156);
     position: absolute;
     top: 100%;
     left: 0;
     display: none;
-    width: 100%; /* Para ocupar toda a largura do .menu-container */
-    z-index: 1001; /* Certifique-se de que o z-index seja maior do que o z-index do .menu-container */
+    z-index: 1001;
+    width: 100%;
+    background-color: aqua;
+    opacity: 1; /* Mude para 1 inicialmente para garantir que não seja transparente */
+    overflow: hidden;
+    max-height: 0; /* Altere para max-height 0 para ocultar o conteúdo */
+    transition: max-height 0.3s ease, opacity 0.3s ease; /* Adicione transição suave */
 }
 
 #main-menu a {
-    color: white;
+    color: rgb(121, 99, 99);
     text-decoration: none;
     display: block;
     padding: 10px;
@@ -53,6 +56,13 @@ body {
 
 #main-menu a:hover {
     background-color: #be1717;
+}
+
+.menu-opened #main-menu {
+    background-color: rgb(34, 119, 194);
+    opacity: 1;
+    max-height: 500px; /* Defina um valor máximo suficientemente grande para a altura do conteúdo (ajuste conforme necessário) */
+    transition: max-height 0.3s ease, opacity 0.3s ease; /* Adicione transição suave */
 }
 
 /* Adicione este estilo para o menu aberto */

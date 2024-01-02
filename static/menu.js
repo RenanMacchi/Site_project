@@ -4,31 +4,46 @@ document.addEventListener('DOMContentLoaded', function () {
     const menuContainer = document.querySelector('.menu-container');
 
     menuHeader.addEventListener('click', function () {
-        mainMenu.style.display = mainMenu.style.display === 'block' ? 'none' : 'block';
         menuHeader.classList.toggle('menu-opened');
-        menuContainer.classList.toggle('menu-closed', mainMenu.style.display === 'none');
-    });
+        menuContainer.classList.toggle('menu-closed', !menuHeader.classList.contains('menu-opened'));
 
-    // Fechar o menu se clicar fora dele
-    document.addEventListener('click', function (event) {
-        if (!menuContainer.contains(event.target)) {
-            mainMenu.style.display = 'none';
-            menuHeader.classList.remove('menu-opened');
-            menuContainer.classList.add('menu-closed');
+        if (menuHeader.classList.contains('menu-opened')) {
+            mainMenu.style.display = 'block';
+            mainMenu.style.maxHeight = '500px'; // Adicione a altura máxima desejada (ajuste conforme necessário)
+        } else {
+            mainMenu.style.maxHeight = '0';
+            setTimeout(() => {
+                mainMenu.style.display = 'none';
+            }, 300);
         }
     });
 
-    // Fechar o menu ao sair do menu
-    menuContainer.addEventListener('mouseleave', function () {
-        mainMenu.style.display = 'none';
-        menuHeader.classList.remove('menu-opened');
-        menuContainer.classList.add('menu-closed');
+    document.addEventListener('click', function (event) {
+        if (!menuContainer.contains(event.target)) {
+            menuHeader.classList.remove('menu-opened');
+            menuContainer.classList.add('menu-closed');
+            mainMenu.style.maxHeight = '0';
+            setTimeout(() => {
+                mainMenu.style.display = 'none';
+            }, 300);
+        }
     });
 
-    // Fechar o menu ao rolar a página
-    window.addEventListener('scroll', function () {
-        mainMenu.style.display = 'none';
+    menuContainer.addEventListener('mouseleave', function () {
         menuHeader.classList.remove('menu-opened');
         menuContainer.classList.add('menu-closed');
+        mainMenu.style.maxHeight = '0';
+        setTimeout(() => {
+            mainMenu.style.display = 'none';
+        }, 300);
+    });
+
+    window.addEventListener('scroll', function () {
+        menuHeader.classList.remove('menu-opened');
+        menuContainer.classList.add('menu-closed');
+        mainMenu.style.maxHeight = '0';
+        setTimeout(() => {
+            mainMenu.style.display = 'none';
+        }, 300);
     });
 });
