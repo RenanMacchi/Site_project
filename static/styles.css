@@ -13,6 +13,11 @@ body {
     color: white;
     padding: 10px;
     text-align: center;
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Certifique-se de que o z-index seja maior do que o z-index do conteúdo da página */
 }
 
 .menu-header {
@@ -30,6 +35,12 @@ body {
 #main-menu {
     display: none;
     background-color: rgb(135, 156, 156);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    display: none;
+    width: 100%; /* Para ocupar toda a largura do .menu-container */
+    z-index: 1001; /* Certifique-se de que o z-index seja maior do que o z-index do .menu-container */
 }
 
 #main-menu a {
@@ -37,6 +48,7 @@ body {
     text-decoration: none;
     display: block;
     padding: 10px;
+    
 }
 
 #main-menu a:hover {
