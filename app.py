@@ -5,8 +5,21 @@ app.secret_key = 'teste'  # Certifique-se de alterar isso para uma chave segura 
 
 # Lista de usuários fictícios (substitua por um banco de dados real)
 usuarios = {
-    'casa119': {'senha': '85063894020', 'casa': 'Casa 119', 'nome1': 'Renan', 'contato1': '111', 'nome2': '', 'contato2': '222', 'nome3': '', 'contato3': '333'},
+    'casa119': {
+        'senha': '85063894020',
+        'casa': 'casa119',
+        'nome1': 'Renan',
+        'contato1': '111',
+        'instagram1': 'renan_insta',
+        'nome2': '',
+        'contato2': '222',
+        'instagram2': '',
+        'nome3': '',
+        'contato3': '333',
+        'instagram3': 'renan_insta3',
+    },
 }
+
 
 @app.route('/')
 def home():
@@ -94,6 +107,7 @@ def atualizar_perfil():
         # Atualize as informações do perfil com os valores do formulário
         novo_nome1 = request.form['novo_nome1']
         novo_contato1 = request.form['novo_contato1']
+        novo_instagram1 = request.form['novo_instagram1']
 
         if novo_nome1 != usuario['nome1']:
             usuario['nome1'] = novo_nome1
@@ -101,8 +115,12 @@ def atualizar_perfil():
         if novo_contato1 != usuario['contato1']:
             usuario['contato1'] = novo_contato1
 
+        if novo_instagram1 != usuario['instagram1']:
+            usuario['instagram1'] = novo_instagram1
+
         novo_nome2 = request.form['novo_nome2']
         novo_contato2 = request.form['novo_contato2']
+        novo_instagram2 = request.form['novo_instagram2']
 
         if novo_nome2 != usuario['nome2']:
             usuario['nome2'] = novo_nome2
@@ -110,14 +128,21 @@ def atualizar_perfil():
         if novo_contato2 != usuario['contato2']:
             usuario['contato2'] = novo_contato2
 
+        if novo_instagram2 != usuario['instagram2']:
+            usuario['instagram2'] = novo_instagram2
+
         novo_nome3 = request.form['novo_nome3']
         novo_contato3 = request.form['novo_contato3']
+        novo_instagram3 = request.form['novo_instagram3']
 
         if novo_nome1 != usuario['nome3']:
             usuario['nome3'] = novo_nome3
 
         if novo_contato1 != usuario['contato3']:
             usuario['contato3'] = novo_contato3
+
+        if novo_instagram3 != usuario['instagram3']:
+            usuario['instagram3'] = novo_instagram3
 
         # Repita o mesmo padrão para os outros campos, se necessário
 

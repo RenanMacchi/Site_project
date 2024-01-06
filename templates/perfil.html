@@ -29,20 +29,23 @@
 
 <!-- Adicione mais informações do perfil conforme necessário -->
 
-    <div class="form-row">
-        <div class="form-label">Nome de usuário 1: {{ usuario.nome1 }}</div>
-        <div class="form-label">WhatsApp: {{ usuario.contato1 }}</div>
-    </div>
-  
-    <div class="form-row">
-        <div class="form-label">Nome de usuário 2: {{ usuario.nome2 }}</div>
-        <div class="form-label">WhatsApp: {{ usuario.contato2 }}</div>   
-    </div>
-    
-    <div class="form-row">
-        <div class="form-label">Nome de usuário 3: {{ usuario.nome3 }}</div>
-        <div class="form-label">WhatsApp: {{ usuario.contato3 }}</div>   
-    </div>
+<div class="form-row">
+    <div class="form-label">Nome de usuário 1: {{ usuario.nome1 }}</div>
+    <div class="form-label">WhatsApp: {{ usuario.contato1 }}</div>
+    <div class="form-label">Instagram: {{ usuario.instagram1 }}</div>
+</div>
+
+<div class="form-row">
+    <div class="form-label">Nome de usuário 2: {{ usuario.nome2 }}</div>
+    <div class="form-label">WhatsApp: {{ usuario.contato2 }}</div>
+    <div class="form-label">Instagram: {{ usuario.instagram2 }}</div>
+</div>
+ 
+<div class="form-row">
+    <div class="form-label">Nome de usuário 3: {{ usuario.nome3 }}</div>
+    <div class="form-label">WhatsApp: {{ usuario.contato3 }}</div>
+    <div class="form-label">Instagram: {{ usuario.instagram3 }}</div>
+</div>
 
     <a href="{{ url_for('alterar_perfil') }}"><button type="button">Alterar</button></a>
 
