@@ -4,9 +4,8 @@ body {
     padding: 0;
     background-color: #f4f4f4;
     box-sizing: border-box;
+    width: auto;
 }
-
-/* Outros estilos aqui... */
 
 .menu-container {
     background-color: #333;
@@ -14,10 +13,7 @@ body {
     padding: 10px;
     text-align: center;
     position: relative;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000; /* Certifique-se de que o z-index seja maior do que o z-index do conteúdo da página */
+    z-index: 1000;
 }
 
 .menu-header {
@@ -39,11 +35,11 @@ body {
     display: none;
     z-index: 1001;
     width: 100%;
-    background-color: #473232; /* Altere para a cor desejada quando o menu estiver aberto */
+    background-color: #473232;
     opacity: 0;
     overflow: hidden;
     max-height: 0;
-    transition: opacity 0.3s ease, max-height 0.3s ease, background-color 0.3s ease; /* Adicione transição suave para a cor */
+    transition: opacity 0.3s ease, max-height 0.3s ease, background-color 0.3s ease;
 }
 
 #main-menu a {
@@ -51,7 +47,6 @@ body {
     text-decoration: none;
     display: block;
     padding: 10px;
-    
 }
 
 #main-menu a:hover {
@@ -59,13 +54,12 @@ body {
 }
 
 .menu-opened #main-menu {
-    background-color: #f0f0f0; /* Altere para a cor desejada quando o menu estiver aberto */
+    background-color: #f0f0f0;
     opacity: 1;
     max-height: 500px;
-    transition: opacity 0.3s ease, max-height 0.3s ease, background-color 0.3s ease; /* Adicione transição suave para a cor */
+    transition: opacity 0.3s ease, max-height 0.3s ease, background-color 0.3s ease;
 }
 
-/* Adicione este estilo para o menu aberto */
 .menu-opened #menu-icon {
     transform: rotate(90deg);
     transition: transform 0.3s;
@@ -74,4 +68,22 @@ body {
 .menu-closed #menu-icon {
     transform: rotate(0deg);
     transition: transform 0.3s;
+}
+
+@media only screen and (max-width: 768px) {
+    body {
+        font-size: 16px;
+    }
+
+    #menu-icon {
+        font-size: 18px;
+    }
+
+    #main-menu {
+        max-height: none;
+    }
+
+    #main-menu a {
+        font-size: 16px;
+    }
 }
