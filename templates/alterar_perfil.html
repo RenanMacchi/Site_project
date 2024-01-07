@@ -5,11 +5,24 @@
 {% block page_title %}Meu perfil{% endblock %}
 
 {% block content %}
-
 <style>
-    form {
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+    }
+
+    .container {
         max-width: 400px; /* Ajuste a largura conforme necessário */
         margin: 0 auto; /* Centraliza o formulário */
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-top: 20px; /* Espaçamento superior */
+    }
+
+    form {
+        margin-top: 20px; /* Espaçamento superior */
     }
 
     label {
@@ -21,6 +34,7 @@
         width: 100%; /* Preenche a largura do contêiner pai */
         box-sizing: border-box; /* Inclui padding e borda no cálculo de largura */
         margin-bottom: 10px; /* Espaçamento inferior entre as entradas */
+        padding: 8px; /* Adiciona um preenchimento uniforme */
     }
 
     .error-message {
@@ -31,13 +45,23 @@
     button {
         width: 100%; /* Preenche a largura do contêiner pai */
         box-sizing: border-box; /* Inclui padding e borda no cálculo de largura */
+        padding: 10px; /* Adiciona um preenchimento uniforme */
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
     }
 </style>
+
 
     <h2>Alterar Perfil da {{ usuario.casa }}</h2>
 
     <!-- Adicione os campos necessários para a alteração do perfil -->
-    <form method="post" action="{{ url_for('atualizar_perfil') }}">
+    <form method="post" action="{{ url_for('atualizar_perfil') }}" class="container">
         <div>
             <label for="novo_nome1">Nome 1:</label>
             <input type="text" id="novo_nome1" name="novo_nome1" value="{{ usuario.nome1 }}">
@@ -113,6 +137,5 @@
             return numero.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
         }
     </script>
-
 
 {% endblock %}

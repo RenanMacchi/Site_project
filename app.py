@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, render_template_string
 
 app = Flask(__name__)
 app.secret_key = 'teste'  # Certifique-se de alterar isso para uma chave segura em um ambiente de produção
@@ -148,6 +148,61 @@ def atualizar_perfil():
 
     # Redireciona de volta para a página de perfil após as alterações
     return redirect(url_for('perfil'))
+
+@app.route('/alterar_senha')
+def alterar_senha():
+    # Obtém o usuário logado da sessão
+    usuario_logado = session.get('usuario_logado')
+
+    # Se não houver usuário logado, redireciona para a página de login
+    if not usuario_logado:
+        return redirect(url_for('login'))
+
+    return render_template('alterar_senha.html')
+
+# ...
+
+@app.route('/atualizar_senha', methods=['POST'])
+def atualizar_senha():
+    # Obtém o usuário logado da sessão
+    usuario_logado = session.get('usuario_logado')
+
+    # Se não houver usuário logado, redireciona para a página de login
+    if not usuario_logado:
+        return redirect(url_for('login'))
+
+    # Obtém os detalhes do usuário a partir da lista de usuários
+    usuario = usuarios.get(usuario_logado)
+
+    erro_senha_atual = None  # Defina a variável antes das condições
+
+    if request.method == 'POST':
+        senha_atual = request.form['senha_atual']
+        nova_senha = request.form['nova_senha']
+        confirmar_nova_senha = request.form['confirmar_nova_senha']
+
+        # Verifica se a senha atual está correta
+        if senha_atual != usuario['senha']:
+            # Adicione uma mensagem de erro, se desejar
+            erro_senha_atual = 'A senha atual está incorreta. Tente novamente.'
+
+        # Verifica se a nova senha e a confirmação coincidem
+        elif nova_senha != confirmar_nova_senha:
+            # Adicione uma mensagem de erro, se desejar
+            erro_confirmar_nova_senha = 'As senhas não coincidem. Tente novamente.'
+            return render_template('alterar_senha.html', usuario_logado=usuario_logado, erro_confirmar_nova_senha=erro_confirmar_nova_senha)
+
+        else:
+            # Atualiza a senha do usuário
+            usuario['senha'] = nova_senha
+
+            # Remova o usuário logado da sessão (efetuar logout)
+            session.pop('usuario_logado', None)
+
+            # Redireciona para a página de login
+            return redirect(url_for('login'))
+
+    return render_template('alterar_senha.html', usuario_logado=usuario_logado, erro_senha_atual=erro_senha_atual)
 
 @app.route('/logout')
 def logout():

@@ -7,47 +7,107 @@
 {% block content %}
 
 <style>
-    .form-row {
+    .user-block {
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin: 0 auto;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        max-width: 400px;
+    }
+
+    .user-info {
         display: flex;
-        flex-direction: column;
-        margin-bottom: 10px; /* Espaçamento entre as linhas, ajuste conforme necessário */    
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
     }
 
-    .form-label {
-        margin-bottom: 5px; /* Espaçamento entre os itens, ajuste conforme necessário */
+    .user-info-label {
+        font-weight: bold;
+        margin-right: 10px;
     }
 
-    /* Media query para telas menores (aqui, definido para 600 pixels) */
-    @media (max-width: 600px) {
-    .form-row {
-        flex-direction: column; /* Layout de coluna única para telas menores */
-        }
+    .button-container {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .action-button {
+        width: 400px; /* Mesma largura que os blocos */
+        padding: 12px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        margin-bottom: 10px;
+    }
+
+    .action-button:hover {
+        background-color: #0056b3;
     }
 </style>
 
-    <h2>Perfil da {{ usuario.casa }}</h2>
+<h2>Perfil da {{ usuario.casa }}</h2>
 
-<!-- Adicione mais informações do perfil conforme necessário -->
+<!-- Informações do perfil -->
+<div class="user-block">
+    <div class="user-info">
+        <div class="user-info-label">Nome de usuário 1:</div>
+        <div>{{ usuario.nome1 }}</div>
+    </div>
 
-<div class="form-row">
-    <div class="form-label">Nome de usuário 1: {{ usuario.nome1 }}</div>
-    <div class="form-label">WhatsApp: {{ usuario.contato1 }}</div>
-    <div class="form-label">Instagram: {{ usuario.instagram1 }}</div>
+    <div class="user-info">
+        <div class="user-info-label">WhatsApp:</div>
+        <div>{{ usuario.contato1 }}</div>
+    </div>
+
+    <div class="user-info">
+        <div class="user-info-label">Instagram:</div>
+        <div>{{ usuario.instagram1 }}</div>
+    </div>
 </div>
 
-<div class="form-row">
-    <div class="form-label">Nome de usuário 2: {{ usuario.nome2 }}</div>
-    <div class="form-label">WhatsApp: {{ usuario.contato2 }}</div>
-    <div class="form-label">Instagram: {{ usuario.instagram2 }}</div>
-</div>
- 
-<div class="form-row">
-    <div class="form-label">Nome de usuário 3: {{ usuario.nome3 }}</div>
-    <div class="form-label">WhatsApp: {{ usuario.contato3 }}</div>
-    <div class="form-label">Instagram: {{ usuario.instagram3 }}</div>
+<div class="user-block">
+    <div class="user-info">
+        <div class="user-info-label">Nome de usuário 2:</div>
+        <div>{{ usuario.nome2 }}</div>
+    </div>
+
+    <div class="user-info">
+        <div class="user-info-label">WhatsApp:</div>
+        <div>{{ usuario.contato2 }}</div>
+    </div>
+
+    <div class="user-info">
+        <div class="user-info-label">Instagram:</div>
+        <div>{{ usuario.instagram2 }}</div>
+    </div>
 </div>
 
-    <a href="{{ url_for('alterar_perfil') }}"><button type="button">Alterar</button></a>
+<div class="user-block">
+    <div class="user-info">
+        <div class="user-info-label">Nome de usuário 3:</div>
+        <div>{{ usuario.nome3 }}</div>
+    </div>
 
-    
+    <div class="user-info">
+        <div class="user-info-label">WhatsApp:</div>
+        <div>{{ usuario.contato3 }}</div>
+    </div>
+
+    <div class="user-info">
+        <div class="user-info-label">Instagram:</div>
+        <div>{{ usuario.instagram3 }}</div>
+    </div>
+</div>
+
+<!-- Botões de alteração -->
+<div class="button-container">
+    <a href="{{ url_for('alterar_perfil') }}"><button class="action-button" type="button">Alterar</button></a>
+    <br>
+    <a href="{{ url_for('alterar_senha') }}"><button class="action-button" type="button">Alterar senha</button></a>
+    </br>
+</div>
+
 {% endblock %}
