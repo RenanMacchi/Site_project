@@ -8,12 +8,13 @@
 
 <style>
     .user-block {
-        border: 1px solid #ddd;
-        padding: 15px;
-        margin: 0 auto;
-        margin-bottom: 20px;
-        border-radius: 8px;
         max-width: 400px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
     }
 
     .user-info {
@@ -46,12 +47,17 @@
     .action-button:hover {
         background-color: #0056b3;
     }
+
+    h2 {
+        text-align: center;
+        margin-top: 0px;
+    }
 </style>
 
-<h2>Perfil da {{ usuario.casa }}</h2>
 
 <!-- Informações do perfil -->
 <div class="user-block">
+    <h2>Perfil da {{ usuario.casa }}</h2>
     <div class="user-info">
         <div class="user-info-label">Nome de usuário 1:</div>
         <div>{{ usuario.nome1 }}</div>

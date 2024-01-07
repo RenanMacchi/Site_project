@@ -14,6 +14,11 @@
         .container {
             max-width: 400px;
             margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
         }
 
         .form-group {
@@ -49,12 +54,16 @@
         button:hover {
             background-color: #0056b3;
         }
-    </style>
 
-    <h2>Alterar Senha</h2>
+        h2 {
+        text-align: center;
+        margin-top: 0px;
+    }
+    </style>
 
     <!-- Adicione os campos necessários para a alteração de senha -->
     <form method="post" action="{{ url_for('atualizar_senha') }}" class="container">
+        <h2>Alterar Senha</h2>
         <div class="form-group">
             <label for="senha_atual">Senha Atual:</label>
             <input type="password" id="senha_atual" name="senha_atual" required>

@@ -28,6 +28,7 @@
     label {
         display: block; /* Coloca cada rótulo e entrada em uma linha separada */
         margin-bottom: 5px; /* Espaçamento inferior entre os rótulos e as entradas */
+        font-weight: bold;
     }
 
     input {
@@ -55,13 +56,16 @@
     button:hover {
         background-color: #0056b3;
     }
+
+    h2 {
+        text-align: center;
+        margin-top: 0px;
+    }
 </style>
-
-
-    <h2>Alterar Perfil da {{ usuario.casa }}</h2>
 
     <!-- Adicione os campos necessários para a alteração do perfil -->
     <form method="post" action="{{ url_for('atualizar_perfil') }}" class="container">
+        <h2>Alterar Perfil da {{ usuario.casa }}</h2>
         <div>
             <label for="novo_nome1">Nome 1:</label>
             <input type="text" id="novo_nome1" name="novo_nome1" value="{{ usuario.nome1 }}">
@@ -121,20 +125,22 @@
 
     <script>
         function formatarNumeroContato(input) {
+            // Remover caracteres não numéricos
             const numeroLimpo = input.value.replace(/\D/g, '');
-            const numeroFormatado = formatarComoTelefone(numeroLimpo);
-            input.value = numeroFormatado;
 
-            const erroElemento = document.getElementById('erro_' + input.id);
-            if (numeroLimpo.length !== 11) {
-                erroElemento.textContent = 'O número de contato deve ter 11 dígitos.';
-            } else {
-                erroElemento.textContent = '';
+            // Determinar o formato com base no comprimento
+            let formato = '';
+            if (numeroLimpo.length === 10) {
+                formato = '($1)$2-$3';
+            } else if (numeroLimpo.length === 11) {
+                formato = '($1)$2-$3$4';
             }
-        }
 
-        function formatarComoTelefone(numero) {
-            return numero.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            // Aplicar a formatação
+            const numeroFormatado = numeroLimpo.replace(/^(\d{2})(\d{4,5})(\d{4})(\d{0,4})$/, formato);
+
+            // Atualizar o valor do input
+            input.value = numeroFormatado;
         }
     </script>
 
