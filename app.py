@@ -5,19 +5,28 @@ app = Flask(__name__)
 app.secret_key = 'teste'
 
 # Lista de usuários fictícios (substitua por um banco de dados real)
+# Lista de usuários fictícios (substitua por um banco de dados real)
 usuarios = {
     'casa119': {
         'senha': '85063894020',
         'casa': 'casa119',
-        'nome1': 'Renan',
-        'contato1': '111',
-        'instagram1': 'renan_insta',
-        'nome2': '',
-        'contato2': '222',
-        'instagram2': '',
-        'nome3': '',
-        'contato3': '333',
-        'instagram3': 'renan_insta3',
+        'perfis': [
+            {
+                'nome': 'Renan',
+                'contato': '111',
+                'instagram': 'renan_insta',
+            },
+            {
+                'nome': '',
+                'contato': '222',
+                'instagram': '',
+            },
+            {
+                'nome': '',
+                'contato': '333',
+                'instagram': 'renan_insta3',
+            },
+        ],
     },
 }
 
@@ -59,6 +68,9 @@ def postar_noticia():
         # Obtenha os dados do formulário
         titulo = request.form['titulo']
         conteudo = request.form['conteudo']
+        nome_usuario = request.form['nome_usuario']
+        whatsapp = request.form['whatsapp']
+        instagram = request.form['instagram']
 
         # Crie uma string representando a data e hora atual
         data_atual = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -68,7 +80,10 @@ def postar_noticia():
             'titulo': titulo,
             'conteudo': conteudo,
             'autor': usuario_logado,
-            'data': data_atual
+            'data': data_atual,
+            'nome_usuario': nome_usuario,
+            'whatsapp': whatsapp,
+            'instagram': instagram,
         }
 
         # Adicione a nova notícia à lista
@@ -115,7 +130,8 @@ def perfil():
     usuario = usuarios.get(usuario_logado)
 
     if usuario:
-        return render_template('perfil.html', usuario=usuario)
+        perfis = usuario.get('perfis', [])
+        return render_template('perfil.html', perfis=perfis)
     else:
         return 'Usuário não encontrado', 404
 
@@ -150,50 +166,24 @@ def atualizar_perfil():
     usuario = usuarios.get(usuario_logado)
 
     if request.method == 'POST':
-        # Atualize as informações do perfil com os valores do formulário
-        novo_nome1 = request.form['novo_nome1']
-        novo_contato1 = request.form['novo_contato1']
-        novo_instagram1 = request.form['novo_instagram1']
+        for i, perfil in enumerate(usuario['perfis']):
+            # Atualize as informações do perfil com os valores do formulário
+            novo_nome = request.form.get(f'novo_nome{i + 1}')
+            novo_contato = request.form.get(f'novo_contato{i + 1}')
+            novo_instagram = request.form.get(f'novo_instagram{i + 1}')
 
-        if novo_nome1 != usuario['nome1']:
-            usuario['nome1'] = novo_nome1
+            if novo_nome is not None:
+                perfil['nome'] = novo_nome
 
-        if novo_contato1 != usuario['contato1']:
-            usuario['contato1'] = novo_contato1
+            if novo_contato is not None:
+                perfil['contato'] = novo_contato
 
-        if novo_instagram1 != usuario['instagram1']:
-            usuario['instagram1'] = novo_instagram1
-
-        novo_nome2 = request.form['novo_nome2']
-        novo_contato2 = request.form['novo_contato2']
-        novo_instagram2 = request.form['novo_instagram2']
-
-        if novo_nome2 != usuario['nome2']:
-            usuario['nome2'] = novo_nome2
-
-        if novo_contato2 != usuario['contato2']:
-            usuario['contato2'] = novo_contato2
-
-        if novo_instagram2 != usuario['instagram2']:
-            usuario['instagram2'] = novo_instagram2
-
-        novo_nome3 = request.form['novo_nome3']
-        novo_contato3 = request.form['novo_contato3']
-        novo_instagram3 = request.form['novo_instagram3']
-
-        if novo_nome1 != usuario['nome3']:
-            usuario['nome3'] = novo_nome3
-
-        if novo_contato1 != usuario['contato3']:
-            usuario['contato3'] = novo_contato3
-
-        if novo_instagram3 != usuario['instagram3']:
-            usuario['instagram3'] = novo_instagram3
-
-        # Repita o mesmo padrão para os outros campos, se necessário
+            if novo_instagram is not None:
+                perfil['instagram'] = novo_instagram
 
     # Redireciona de volta para a página de perfil após as alterações
     return redirect(url_for('perfil'))
+
 
 @app.route('/alterar_senha')
 def alterar_senha():

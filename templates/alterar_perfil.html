@@ -63,85 +63,52 @@
     }
 </style>
 
-    <!-- Adicione os campos necessários para a alteração do perfil -->
-    <form method="post" action="{{ url_for('atualizar_perfil') }}" class="container">
-        <h2>Alterar Perfil da {{ usuario.casa }}</h2>
+<!-- Adicione os campos necessários para a alteração do perfil -->
+<form method="post" action="{{ url_for('atualizar_perfil') }}" class="container">
+    <h2>Alterar Perfil da {{ usuario.casa }}</h2>
+
+    {% for perfil in usuario.perfis %}
         <div>
-            <label for="novo_nome1">Nome 1:</label>
-            <input type="text" id="novo_nome1" name="novo_nome1" value="{{ usuario.nome1 }}">
-            <div id="erro_novo_contato1" class="error-message"></div>
+            <label for="novo_nome{{ loop.index }}">Nome {{ loop.index }}:</label>
+            <input type="text" id="novo_nome{{ loop.index }}" name="novo_nome{{ loop.index }}" value="{{ perfil.nome }}">
+            <div id="erro_novo_nome{{ loop.index }}" class="error-message"></div>
         </div>
 
         <div>
-            <label for="novo_contato1">Whatsapp 1:</label>
-            <input type="tel" id="novo_contato1" name="novo_contato1" value="{{ usuario.contato1 }}" oninput="formatarNumeroContato(this)">
-            <div id="erro_novo_contato1" class="error-message"></div>
+            <label for="novo_contato{{ loop.index }}">Whatsapp {{ loop.index }}:</label>
+            <input type="tel" id="novo_contato{{ loop.index }}" name="novo_contato{{ loop.index }}" value="{{ perfil.contato }}" oninput="formatarNumeroContato(this)">
+            <div id="erro_novo_contato{{ loop.index }}" class="error-message"></div>
         </div>
 
         <div>
-            <label for="novo_instagram1">Instagram 1:</label>
-            <input type="text" id="novo_instagram1" name="novo_instagram1" value="{{ usuario.instagram1 }}">
-            <div id="erro_novo_instagram1" class="error-message"></div>
+            <label for="novo_instagram{{ loop.index }}">Instagram {{ loop.index }}:</label>
+            <input type="text" id="novo_instagram{{ loop.index }}" name="novo_instagram{{ loop.index }}" value="{{ perfil.instagram }}">
+            <div id="erro_novo_instagram{{ loop.index }}" class="error-message"></div>
         </div>
+    {% endfor %}
+    
+    <button type="submit">Salvar Alterações</button>
+</form>
 
-        <div>
-            <label for="novo_nome2">Nome 2:</label>
-            <input type="text" id="novo_nome2" name="novo_nome2" value="{{ usuario.nome2 }}">
-            <div id="erro_novo_contato2" class="error-message"></div>
-        </div>
+<script>
+    function formatarNumeroContato(input) {
+        // Remover caracteres não numéricos
+        const numeroLimpo = input.value.replace(/\D/g, '');
 
-        <div>
-            <label for="novo_contato2">Whatsapp 2:</label>
-            <input type="tel" id="novo_contato2" name="novo_contato2" value="{{ usuario.contato2 }}" oninput="formatarNumeroContato(this)">
-            <div id="erro_novo_contato2" class="error-message"></div>
-        </div>
-
-        <div>
-            <label for="novo_instagram2">Instagram 2:</label>
-            <input type="text" id="novo_instagram2" name="novo_instagram2" value="{{ usuario.instagram2 }}">
-            <div id="erro_novo_instagram2" class="error-message"></div>
-        </div>
-
-        <div>
-            <label for="novo_nome3">Nome 3:</label>
-            <input type="text" id="novo_nome3" name="novo_nome3" value="{{ usuario.nome3 }}">
-            <div id="erro_novo_contato3" class="error-message"></div>
-        </div>
-
-        <div>
-            <label for="novo_contato3">Whatsapp 3:</label>
-            <input type="tel" id="novo_contato3" name="novo_contato3" value="{{ usuario.contato3 }}" oninput="formatarNumeroContato(this)">
-            <div id="erro_novo_contato3" class="error-message"></div>
-        </div>
-
-        <div>
-            <label for="novo_instagram3">Instagram 3:</label>
-            <input type="text" id="novo_instagram3" name="novo_instagram3" value="{{ usuario.instagram3 }}">
-            <div id="erro_novo_instagram3" class="error-message"></div>
-        </div>
-        
-        <button type="submit">Salvar Alterações</button>
-    </form>
-
-    <script>
-        function formatarNumeroContato(input) {
-            // Remover caracteres não numéricos
-            const numeroLimpo = input.value.replace(/\D/g, '');
-
-            // Determinar o formato com base no comprimento
-            let formato = '';
-            if (numeroLimpo.length === 10) {
-                formato = '($1)$2-$3';
-            } else if (numeroLimpo.length === 11) {
-                formato = '($1)$2-$3$4';
-            }
-
-            // Aplicar a formatação
-            const numeroFormatado = numeroLimpo.replace(/^(\d{2})(\d{4,5})(\d{4})(\d{0,4})$/, formato);
-
-            // Atualizar o valor do input
-            input.value = numeroFormatado;
+        // Determinar o formato com base no comprimento
+        let formato = '';
+        if (numeroLimpo.length === 10) {
+            formato = '($1)$2-$3';
+        } else if (numeroLimpo.length === 11) {
+            formato = '($1)$2-$3$4';
         }
-    </script>
+
+        // Aplicar a formatação
+        const numeroFormatado = numeroLimpo.replace(/^(\d{2})(\d{4,5})(\d{4})(\d{0,4})$/, formato);
+
+        // Atualizar o valor do input
+        input.value = numeroFormatado;
+    }
+</script>
 
 {% endblock %}
