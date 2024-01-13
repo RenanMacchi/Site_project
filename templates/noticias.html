@@ -4,5 +4,14 @@
 
 {% block content %}
     <h2>Notícias</h2>
-    <!-- Conteúdo específico da página inicial -->
+    {% for noticia in noticias %}
+        <!-- Conteúdo da notícia -->
+        <h3>{{ noticia['titulo'] }}</h3>
+        <p>Autor: {{ noticia['autor'] }} - Data: {{ noticia['data'] }}</p>
+        <p>{{ noticia['conteudo'] }}</p>
+        <hr>
+    {% endfor %}
+
+    <!-- Botão para criar nova notícia (link para a rota postar_noticia) -->
+    <a href="{{ url_for('postar_noticia') }}" class="btn btn-primary">Criar Nova Notícia</a>
 {% endblock %}

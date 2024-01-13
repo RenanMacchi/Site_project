@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, session, render_template_string
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = 'teste'  # Certifique-se de alterar isso para uma chave segura em um ambiente de produção
+app.secret_key = 'teste'
 
 # Lista de usuários fictícios (substitua por um banco de dados real)
 usuarios = {
@@ -20,6 +21,15 @@ usuarios = {
     },
 }
 
+noticias = []
+exemplo_noticia = {
+    'titulo': 'Título da Notícia',
+    'conteudo': 'Conteúdo da notícia...',
+    'autor': 'casa119',  # Usuário que postou a notícia
+    'data': '2024-01-13 12:00:00'  # Data e hora da postagem
+}
+
+noticias.append(exemplo_noticia)
 
 @app.route('/')
 def home():
@@ -33,9 +43,45 @@ def index():
 def buscar():
     return render_template('buscar.html')
 
-@app.route('/noticias')
-def noticias():
-    return render_template('noticias.html')
+@app.route('/exibir_noticias')
+def exibir_noticias():
+    return render_template('noticias.html', noticias=noticias)
+
+@app.route('/postar_noticia', methods=['GET', 'POST'])
+def postar_noticia():
+    # Verifique se o usuário está logado
+    usuario_logado = session.get('usuario_logado')
+    if not usuario_logado:
+        flash('Faça login para criar uma nova notícia.', 'warning')
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        # Obtenha os dados do formulário
+        titulo = request.form['titulo']
+        conteudo = request.form['conteudo']
+
+        # Crie uma string representando a data e hora atual
+        data_atual = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        # Crie um dicionário representando a nova notícia
+        nova_noticia = {
+            'titulo': titulo,
+            'conteudo': conteudo,
+            'autor': usuario_logado,
+            'data': data_atual
+        }
+
+        # Adicione a nova notícia à lista
+        noticias.append(nova_noticia)
+
+        # Exiba uma mensagem de sucesso
+        flash('Notícia criada com sucesso!', 'success')
+
+        # Redirecione de volta para a página de notícias
+        return redirect(url_for('exibir_noticias'))
+
+    # Se o método for GET, exiba o formulário para postar notícia
+    return render_template('postar_noticia.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

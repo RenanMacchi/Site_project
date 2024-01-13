@@ -1,0 +1,14 @@
+{% extends 'layout_base.html' %}
+
+{% block page_title %}Postar Notícia{% endblock %}
+
+{% block content %}
+    <h2>Postar Notícia</h2>
+    <form method="post" action="{{ url_for('postar_noticia') }}">
+        <label for="titulo">Título:</label>
+        <input type="text" name="titulo" required><br>
+        <label for="conteudo">Conteúdo:</label>
+        <textarea name="conteudo" required></textarea><br>
+        <button type="submit">Postar Notícia</button>
+    </form>
+{% endblock %}

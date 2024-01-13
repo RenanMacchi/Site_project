@@ -18,7 +18,7 @@
     <nav id="main-menu">
         <a href="{{ url_for('index') }}">Página inicial</a>
         <a href="{{ url_for('buscar') }}">Buscar</a>
-        <a href="{{ url_for('noticias') }}">Notícias</a>
+        <a href="{{ url_for('exibir_noticias') }}">Notícias</a>
 
         {% if 'usuario_logado' in session %}
             <a href="{{ url_for('perfil') }}">Meu Perfil</a>
