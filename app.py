@@ -1,11 +1,24 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from datetime import datetime
+import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = 'teste'
 
-# Lista de usuários fictícios (substitua por um banco de dados real)
-# Lista de usuários fictícios (substitua por um banco de dados real)
+# Função auxiliar para verificar se a extensão do arquivo é permitida
+def allowed_file(filename):
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+# Configuração do diretório de upload
+UPLOAD_FOLDER = 'C:\\Users\\renan\\Desktop\\img'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+# Lista de usuários fictícios
 usuarios = {
     'casa119': {
         'senha': '85063894020',
@@ -56,6 +69,12 @@ def buscar():
 def exibir_noticias():
     return render_template('noticias.html', noticias=noticias)
 
+@app.route('/exibir_noticia_expandida/<int:noticia_id>')
+def exibir_noticia_expandida(noticia_id):
+    # Adicione lógica para recuperar a notícia específica com base no ID
+    noticia = noticias[noticia_id]
+    return render_template('noticia_expandida.html', noticia=noticia)
+
 @app.route('/postar_noticia', methods=['GET', 'POST'])
 def postar_noticia():
     # Verifique se o usuário está logado
@@ -64,39 +83,80 @@ def postar_noticia():
         flash('Faça login para criar uma nova notícia.', 'warning')
         return redirect(url_for('login'))
 
+    # Obtém os detalhes do usuário a partir da lista de usuários
+    usuario = usuarios.get(usuario_logado)
+
+    total_perfis = len(usuario['perfis'])  # Total de perfis do usuário
+
     if request.method == 'POST':
         # Obtenha os dados do formulário
         titulo = request.form['titulo']
         conteudo = request.form['conteudo']
-        nome_usuario = request.form['nome_usuario']
-        whatsapp = request.form['whatsapp']
-        instagram = request.form['instagram']
+        perfil_escolhido = int(request.form['perfil']) - 1  # Subtrai 1 para obter o índice correto
 
-        # Crie uma string representando a data e hora atual
-        data_atual = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        print(f'Título: {titulo}')
+        print(f'Conteúdo: {conteudo}')
+        print(f'Perfil escolhido: {perfil_escolhido}')
 
-        # Crie um dicionário representando a nova notícia
-        nova_noticia = {
-            'titulo': titulo,
-            'conteudo': conteudo,
-            'autor': usuario_logado,
-            'data': data_atual,
-            'nome_usuario': nome_usuario,
-            'whatsapp': whatsapp,
-            'instagram': instagram,
-        }
+        imagens_salvas = []  # Lista para armazenar os caminhos das imagens salvas
 
-        # Adicione a nova notícia à lista
-        noticias.append(nova_noticia)
+        if 'imagens' in request.files:
+            imagens = request.files.getlist('imagens')
 
-        # Exiba uma mensagem de sucesso
-        flash('Notícia criada com sucesso!', 'success')
+            for arquivo in imagens:
+                # Verificar se o arquivo tem um nome e é permitido
+                if arquivo.filename != '' and allowed_file(arquivo.filename):
+                    # Salvar o arquivo no diretório de upload
+                    caminho_arquivo = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(arquivo.filename))
+                    arquivo.save(caminho_arquivo)
 
-        # Redirecione de volta para a página de notícias
-        return redirect(url_for('exibir_noticias'))
+                    # Adicionar o caminho do arquivo à lista
+                    imagens_salvas.append(caminho_arquivo)
+
+                    # Limitar a quantidade de imagens a 10
+                    if len(imagens_salvas) >= 10:
+                        break
+
+        print(f'Imagens salvas: {imagens_salvas}')
+
+        # Verifica se o perfil escolhido está dentro do intervalo
+        if 0 <= perfil_escolhido < total_perfis:
+            perfil = usuario['perfis'][perfil_escolhido]
+
+            # Preenche os campos do formulário com as informações do perfil escolhido
+            nome_usuario = perfil.get('nome', '')
+            whatsapp = perfil.get('contato', '')
+            instagram = perfil.get('instagram', '')
+
+            # Informações adicionais da notícia
+            autor = f"{perfil['nome']} ({usuario_logado})"
+            data_atual = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+            # Crie um dicionário representando a nova notícia
+            nova_noticia = {
+                'titulo': titulo,
+                'conteudo': conteudo,
+                'autor': autor,
+                'data': data_atual,
+                'nome_usuario': nome_usuario,
+                'whatsapp': whatsapp,
+                'instagram': instagram,
+            }
+
+            # Adicione a lista de caminhos de imagens à notícia
+            nova_noticia['imagens'] = imagens_salvas
+
+            # Adicione a nova notícia à lista
+            noticias.append(nova_noticia)
+
+            # Exiba uma mensagem de sucesso
+            flash('Notícia criada com sucesso!', 'success')
+
+            # Redirecione de volta para a página de notícias
+            return redirect(url_for('exibir_noticias'))
 
     # Se o método for GET, exiba o formulário para postar notícia
-    return render_template('postar_noticia.html')
+    return render_template('postar_noticia.html', perfis=usuario['perfis'], total_perfis=total_perfis)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -248,4 +308,4 @@ def logout():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=False)

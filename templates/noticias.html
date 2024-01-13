@@ -5,13 +5,44 @@
 {% block content %}
     <h2>Notícias</h2>
     {% for noticia in noticias %}
-        <!-- Conteúdo da notícia -->
-        <h3>{{ noticia['titulo'] }}</h3>
-        <p>Autor: {{ noticia['autor'] }} - Data: {{ noticia['data'] }}</p>
-        <p>{{ noticia['conteudo'] }}</p>
-        <hr>
+        <!-- Conteúdo compacto da notícia -->
+        <div>
+            <h3>{{ noticia['titulo'] }}</h3>
+            <p>Autor: {{ noticia['autor'] }} - Data: {{ noticia['data'] }}</p>
+            <button class="expandir" data-noticia="{{ loop.index }}">Expandir</button>
+        </div>
+
+        <!-- Conteúdo expandido (inicialmente oculto) -->
+        <div id="conteudo-noticia-{{ loop.index }}" class="conteudo-noticia" style="display: none;">
+            <p>Conteúdo: {{ noticia['conteudo'] }}</p>
+            <p>Nome de Usuário: {{ noticia['nome_usuario'] }}</p>
+            <p>WhatsApp: {{ noticia['whatsapp'] }}</p>
+            <p>Instagram: {{ noticia['instagram'] }}</p>
+            <hr>
+        </div>
     {% endfor %}
 
     <!-- Botão para criar nova notícia (link para a rota postar_noticia) -->
     <a href="{{ url_for('postar_noticia') }}" class="btn btn-primary">Criar Nova Notícia</a>
+
+    <script>
+        // Adiciona um listener para cada botão de expansão
+        document.querySelectorAll('.expandir').forEach(function(botao) {
+            botao.addEventListener('click', function() {
+                // Obtém o número da notícia associado ao botão
+                var numeroNoticia = this.getAttribute('data-noticia');
+                // Obtém o conteúdo expandido da notícia correspondente
+                var conteudoNoticia = document.getElementById('conteudo-noticia-' + numeroNoticia);
+
+                // Alterna entre exibir e ocultar o conteúdo expandido
+                if (conteudoNoticia.style.display === 'none' || conteudoNoticia.style.display === '') {
+                    conteudoNoticia.style.display = 'block';
+                    this.innerHTML = 'Ocultar'; // Altera o texto do botão para "Ocultar"
+                } else {
+                    conteudoNoticia.style.display = 'none';
+                    this.innerHTML = 'Expandir'; // Altera o texto do botão para "Expandir"
+                }
+            });
+        });
+    </script>
 {% endblock %}
