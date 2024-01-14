@@ -3,55 +3,227 @@
 {% block page_title %}Notícias{% endblock %}
 
 {% block content %}
-    <h2>Notícias</h2>
-    {% for noticia in noticias %}
-        <!-- Conteúdo compacto da notícia -->
-        <div>
-            <h3>{{ noticia['titulo'] }}</h3>
-            <p>Autor: {{ noticia['autor'] }} - Data: {{ noticia['data'] }}</p>
-            <button class="expandir" data-noticia="{{ loop.index }}">Expandir</button>
-        </div>
+
+<style>
+    .noticia {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+        margin-bottom: 20px;
+        background-color: #fff;
+    }
+
+    .noticia h3 {
+        text-align: center;
+        margin-bottom: 0px;
+    }
+
+    .noticia p {
+        margin-bottom: 0px;
+    }
+
+    .expandir {
+        width: 50%;
+        padding: 12px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        margin-bottom: 10px;
+        transform: translate(50%, 0%);
+    }
+
+    .expandir:hover {
+        background-color: #0056b3;
+    }
+
+    .conteudo-noticia {
+        display: none;
+    }
+
+    .imagens-noticia {
+        display: flex;
+        gap: 10px;
+    }
+
+    .imagem-noticia {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        cursor: pointer;
+        transition: transform 0.3s;
+    }
+
+    .imagem-noticia.clicked {
+        transform: scale(1.5);
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(4);
+        z-index: 1000;
+    }
+
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+        transition: background 0.3s;
+    }
+
+    .seta-navegacao {
+        display: none;
+        position: fixed;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 24px;
+        color: white;
+        background-color: rgba(0, 0, 0, 0.5);
+        border: none;
+        cursor: pointer;
+        z-index: 1001;
+    }
+
+    .seta-esquerda {
+        left: 10px;
+        transform: translateX(0);
+    }
+
+    .seta-direita {
+        right: 10px;
+        transform: translateX(0);
+    }
+
+    .imagem-noticia.clicked ~ .seta-navegacao {
+        display: block;
+    }
+
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0);
+        z-index: 999;
+        transition: background 0.3s;
+    }
+
+    .imagem-noticia.clicked ~ .overlay {
+        display: block;
+        background: rgba(0, 0, 0, 0.5);
+    }
+
+    /* Estilo para o botão "Criar Nova Notícia" */
+    #btn-criar-noticia {
+        position: absolute;
+        top: 2.5px;
+        right: 3px;
+        z-index: 1002;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        margin-bottom: 11px;
+        text-align: center;
+    }
+
+</style>
+
+{% for noticia in noticias %}
+    <!-- Conteúdo compacto da notícia -->
+    <div class="noticia">
+        <h3>{{ noticia['titulo'] }}</h3>
+        <p>Autor: {{ noticia['autor'] }} <br>Data: {{ noticia['data'] }}</p></br>
+        <button class="expandir" data-noticia="{{ loop.index }}">Expandir</button>
 
         <!-- Conteúdo expandido (inicialmente oculto) -->
         <div id="conteudo-noticia-{{ loop.index }}" class="conteudo-noticia" style="display: none;">
-            <p>Conteúdo: {{ noticia['conteudo'] }}</p>
-            <p>Nome de Usuário: {{ noticia['nome_usuario'] }}</p>
+            <p>Postado por: {{ noticia['nome_usuario'] }}</p>
             <p>WhatsApp: {{ noticia['whatsapp'] }}</p>
             <p>Instagram: {{ noticia['instagram'] }}</p>
+            <p>{{ noticia['conteudo'] }}</p>
+        
 
             {% if noticia['imagens'] %}
-                <p>Imagens:</p>
-                <ul>
+                <div class="imagens-noticia">
                     {% for imagem in noticia['imagens'] %}
-                        <li><img src="{{ url_for('servir_imagem', identificador_noticia=noticia['identificador'], imagem=imagem) }}" alt="Imagem">
-                        </li>
+                        <img src="{{ url_for('servir_imagem', identificador_noticia=noticia['identificador_noticia'], imagem=imagem) }}" alt="Imagem" class="imagem-noticia">
                     {% endfor %}
-                </ul>
+                    <button class="seta-navegacao seta-esquerda" data-noticia="{{ loop.index }}">&lt;</button>
+                    <button class="seta-navegacao seta-direita" data-noticia="{{ loop.index }}">&gt;</button>
+                    <div class="overlay"></div>
+                </div>
             {% endif %}
 
             <hr>
         </div>
-    {% endfor %}
+    </div>
+{% endfor %}
 
-    <!-- Botão para criar nova notícia (link para a rota postar_noticia) -->
-    <a href="{{ url_for('postar_noticia') }}" class="btn btn-primary">Criar Nova Notícia</a>
+<!-- Botão para criar nova notícia -->
+<a href="{{ url_for('postar_noticia') }}" class="btn btn-primary" id="btn-criar-noticia">Criar Notícia</a>
 
-    <script>
-        // Adiciona um listener para cada botão de expansão
-        document.querySelectorAll('.expandir').forEach(function(botao) {
-            botao.addEventListener('click', function() {
-                // Obtém o número da notícia associado ao botão
-                var numeroNoticia = this.getAttribute('data-noticia');
-                // Obtém o conteúdo expandido da notícia correspondente
-                var conteudoNoticia = document.getElementById('conteudo-noticia-' + numeroNoticia);
-    
-                // Alterna entre exibir e ocultar o conteúdo expandido
-                conteudoNoticia.style.display = (conteudoNoticia.style.display === 'none' || conteudoNoticia.style.display === '') ? 'block' : 'none';
-    
-                // Altera o texto do botão com base no estado atual
-                this.innerHTML = (conteudoNoticia.style.display === 'none') ? 'Expandir' : 'Ocultar';
-            });
+<script>
+    document.querySelectorAll('.expandir').forEach(function (botao) {
+        botao.addEventListener('click', function () {
+            var numeroNoticia = this.getAttribute('data-noticia');
+            var conteudoNoticia = document.getElementById('conteudo-noticia-' + numeroNoticia);
+
+            conteudoNoticia.style.display = (conteudoNoticia.style.display === 'none' || conteudoNoticia.style.display === '') ? 'block' : 'none';
+            this.innerHTML = (conteudoNoticia.style.display === 'none') ? 'Expandir' : 'Ocultar';
         });
-    </script>
-    
+    });
+
+    document.querySelectorAll('.seta-navegacao').forEach(function (seta) {
+        seta.addEventListener('click', function (event) {
+            event.stopPropagation();
+            var numeroNoticia = this.getAttribute('data-noticia');
+            var imagensNoticia = document.querySelectorAll('#conteudo-noticia-' + numeroNoticia + ' .imagem-noticia');
+            var imagemAmpliada = document.querySelector('#conteudo-noticia-' + numeroNoticia + ' .imagem-noticia.clicked');
+            var indiceAtual = Array.from(imagensNoticia).indexOf(imagemAmpliada);
+            var novoIndice = (this.classList.contains('seta-esquerda')) ? indiceAtual - 1 : indiceAtual + 1;
+
+            if (novoIndice >= 0 && novoIndice < imagensNoticia.length) {
+                var novaImagem = imagensNoticia[novoIndice];
+                imagemAmpliada.classList.remove('clicked');
+                novaImagem.classList.add('clicked');
+            }
+        });
+    });
+
+    function fecharImagemAmpliada(event) {
+        var imagemAmpliada = document.querySelector('.imagem-noticia.clicked');
+        if (imagemAmpliada && !imagemAmpliada.contains(event.target)) {
+            imagemAmpliada.classList.remove('clicked');
+            document.querySelector('.overlay').style.display = 'none';
+            document.removeEventListener('click', fecharImagemAmpliada);
+        }
+    }
+
+    document.addEventListener('click', function (event) {
+        var imagemClicada = event.target.closest('.imagem-noticia');
+        if (imagemClicada) {
+            if (imagemClicada.classList.contains('clicked')) {
+                imagemClicada.classList.remove('clicked');
+                document.querySelector('.overlay').style.display = 'none';
+            } else {
+                imagemClicada.classList.add('clicked');
+                document.querySelector('.overlay').style.display = 'block';
+            }
+            document.addEventListener('click', fecharImagemAmpliada);
+        }
+    });
+</script>
+
 {% endblock %}

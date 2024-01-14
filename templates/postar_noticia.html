@@ -1,21 +1,62 @@
-<!-- templates/postar_noticia.html -->
-
 {% extends 'layout_base.html' %}
 
 {% block page_title %}Postar Notícia{% endblock %}
 
 {% block content %}
+<style>
+    .postar-noticia {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    label {
+        margin-top: 10px;
+        display: block;
+    }
+
+    input,
+    textarea,
+    select {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        box-sizing: border-box;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+    h2 {
+        text-align: center;
+    }
+</style>
+
+<div class="postar-noticia">
     <h2>Postar Notícia</h2>
     <form method="POST" action="{{ url_for('postar_noticia') }}" enctype="multipart/form-data">
         <!-- Título da notícia -->
         <label for="titulo">Título:</label>
         <input type="text" id="titulo" name="titulo" required>
-        <br>
 
         <!-- Conteúdo da notícia -->
         <label for="conteudo">Conteúdo:</label>
         <textarea id="conteudo" name="conteudo" required></textarea>
-        <br>
 
         <!-- Escolha do perfil -->
         <label for="perfil">Escolha o perfil:</label>
@@ -24,14 +65,13 @@
                 <option value="{{ i }}">Perfil {{ i }}</option>
             {% endfor %}
         </select>
-        <br>
 
         <!-- Upload de imagens -->
         <label for="imagens">Imagens (até 10):</label>
         <input type="file" name="files[]" accept=".jpg, .jpeg, .png" multiple>
-        <br>
 
         <!-- Botão de envio -->
         <button type="submit">Postar</button>
     </form>
+</div>
 {% endblock %}

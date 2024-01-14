@@ -47,7 +47,7 @@ exemplo_noticia = {
     'titulo': 'Título da Notícia',
     'conteudo': 'Conteúdo da notícia...',
     'autor': 'casa119',  # Usuário que postou a notícia
-    'data': '2024-01-13 12:00:00'  # Data e hora da postagem
+    'data': '13/01/2024 12:00:00'  # Data e hora da postagem
 }
 
 noticias.append(exemplo_noticia)
@@ -126,7 +126,7 @@ def postar_noticia():
 
             # Informações adicionais da notícia
             autor = f"{perfil['nome']} ({usuario_logado})"
-            data_atual = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            data_atual = datetime.now().strftime('%d/%m/%y %H:%M:%S')
 
             # Crie um dicionário representando a nova notícia
             nova_noticia = {
