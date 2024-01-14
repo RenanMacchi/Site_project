@@ -18,6 +18,17 @@
             <p>Nome de Usuário: {{ noticia['nome_usuario'] }}</p>
             <p>WhatsApp: {{ noticia['whatsapp'] }}</p>
             <p>Instagram: {{ noticia['instagram'] }}</p>
+
+            {% if noticia['imagens'] %}
+                <p>Imagens:</p>
+                <ul>
+                    {% for imagem in noticia['imagens'] %}
+                        <li><img src="{{ url_for('servir_imagem', identificador_noticia=noticia['identificador'], imagem=imagem) }}" alt="Imagem">
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
             <hr>
         </div>
     {% endfor %}
@@ -33,16 +44,14 @@
                 var numeroNoticia = this.getAttribute('data-noticia');
                 // Obtém o conteúdo expandido da notícia correspondente
                 var conteudoNoticia = document.getElementById('conteudo-noticia-' + numeroNoticia);
-
+    
                 // Alterna entre exibir e ocultar o conteúdo expandido
-                if (conteudoNoticia.style.display === 'none' || conteudoNoticia.style.display === '') {
-                    conteudoNoticia.style.display = 'block';
-                    this.innerHTML = 'Ocultar'; // Altera o texto do botão para "Ocultar"
-                } else {
-                    conteudoNoticia.style.display = 'none';
-                    this.innerHTML = 'Expandir'; // Altera o texto do botão para "Expandir"
-                }
+                conteudoNoticia.style.display = (conteudoNoticia.style.display === 'none' || conteudoNoticia.style.display === '') ? 'block' : 'none';
+    
+                // Altera o texto do botão com base no estado atual
+                this.innerHTML = (conteudoNoticia.style.display === 'none') ? 'Expandir' : 'Ocultar';
             });
         });
     </script>
+    
 {% endblock %}

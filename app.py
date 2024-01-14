@@ -1,22 +1,21 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash
+from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory
 from datetime import datetime
 import os
+import uuid
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 app.secret_key = 'teste'
 
-# Função auxiliar para verificar se a extensão do arquivo é permitida
-def allowed_file(filename):
-    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+UPLOAD_FOLDER = r'C:\Users\renan\Desktop\img'
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png'}
+MAX_FILES = 10
 
-# Configuração do diretório de upload
-UPLOAD_FOLDER = 'C:\\Users\\renan\\Desktop\\img'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-if not os.path.exists(UPLOAD_FOLDER):
-    os.makedirs(UPLOAD_FOLDER)
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 # Lista de usuários fictícios
 usuarios = {
@@ -88,36 +87,33 @@ def postar_noticia():
 
     total_perfis = len(usuario['perfis'])  # Total de perfis do usuário
 
+    uploaded_files = request.files.getlist("files[]")
+    imagens_salvas = []
+
+    for file in uploaded_files:
+        if file and allowed_file(file.filename):
+            if len(os.listdir(app.config['UPLOAD_FOLDER'])) >= MAX_FILES:
+                return 'Limite de 10 imagens atingido. Não é possível enviar mais imagens.'
+
+            # Crie um identificador único para cada notícia
+            identificador_noticia = str(uuid.uuid4())
+            # Crie o subdiretório para a notícia
+            noticia_dir = os.path.join(app.config['UPLOAD_FOLDER'], identificador_noticia)
+            os.makedirs(noticia_dir, exist_ok=True)
+
+            # Gere um nome de arquivo único para a imagem
+            nome_arquivo = secure_filename(file.filename)
+            nome_arquivo_unico = str(uuid.uuid4()) + '_' + nome_arquivo
+
+            file_path = os.path.join(noticia_dir, nome_arquivo_unico)
+            file.save(file_path)
+            imagens_salvas.append(os.path.join(identificador_noticia, nome_arquivo_unico).replace("\\", "/"))
+   
     if request.method == 'POST':
         # Obtenha os dados do formulário
         titulo = request.form['titulo']
         conteudo = request.form['conteudo']
         perfil_escolhido = int(request.form['perfil']) - 1  # Subtrai 1 para obter o índice correto
-
-        print(f'Título: {titulo}')
-        print(f'Conteúdo: {conteudo}')
-        print(f'Perfil escolhido: {perfil_escolhido}')
-
-        imagens_salvas = []  # Lista para armazenar os caminhos das imagens salvas
-
-        if 'imagens' in request.files:
-            imagens = request.files.getlist('imagens')
-
-            for arquivo in imagens:
-                # Verificar se o arquivo tem um nome e é permitido
-                if arquivo.filename != '' and allowed_file(arquivo.filename):
-                    # Salvar o arquivo no diretório de upload
-                    caminho_arquivo = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(arquivo.filename))
-                    arquivo.save(caminho_arquivo)
-
-                    # Adicionar o caminho do arquivo à lista
-                    imagens_salvas.append(caminho_arquivo)
-
-                    # Limitar a quantidade de imagens a 10
-                    if len(imagens_salvas) >= 10:
-                        break
-
-        print(f'Imagens salvas: {imagens_salvas}')
 
         # Verifica se o perfil escolhido está dentro do intervalo
         if 0 <= perfil_escolhido < total_perfis:
@@ -141,10 +137,8 @@ def postar_noticia():
                 'nome_usuario': nome_usuario,
                 'whatsapp': whatsapp,
                 'instagram': instagram,
+                'imagens': imagens_salvas,  # Adicione a lista de imagens à notícia
             }
-
-            # Adicione a lista de caminhos de imagens à notícia
-            nova_noticia['imagens'] = imagens_salvas
 
             # Adicione a nova notícia à lista
             noticias.append(nova_noticia)
@@ -157,6 +151,11 @@ def postar_noticia():
 
     # Se o método for GET, exiba o formulário para postar notícia
     return render_template('postar_noticia.html', perfis=usuario['perfis'], total_perfis=total_perfis)
+
+# Altere esta função para corrigir as barras no caminho do diretório
+@app.route('/uploads/<path:identificador_noticia>/<imagem>')
+def servir_imagem(identificador_noticia, imagem):
+    return send_from_directory(os.path.join(app.config['UPLOAD_FOLDER'], identificador_noticia.replace("//", "/")), imagem)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
