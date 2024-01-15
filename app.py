@@ -7,7 +7,8 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 app.secret_key = 'teste'
 
-UPLOAD_FOLDER = r'C:\Users\renan\Desktop\img'
+UPLOAD_FOLDER = r'C:\Users\renan\OneDrive\Área de Trabalho\pessoal\Site\img'
+#UPLOAD_FOLDER = r'C:\Users\renan\Desktop\img'
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png'}
 MAX_FILES = 10
 
