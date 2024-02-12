@@ -9,7 +9,7 @@ app.secret_key = 'teste'
 
 UPLOAD_FOLDER = r'C:\Users\renan\Desktop\img'
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png'}
-MAX_FILES = 10
+MAX_FILES = 10000
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
