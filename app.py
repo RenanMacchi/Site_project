@@ -7,8 +7,8 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 app.secret_key = 'teste'
 
-UPLOAD_FOLDER = r'C:\Users\renan\OneDrive\Área de Trabalho\pessoal\Site\img'
-#UPLOAD_FOLDER = r'C:\Users\renan\Desktop\img'
+#UPLOAD_FOLDER = r'C:\Users\renan\OneDrive\Área de Trabalho\pessoal\Site\img'
+UPLOAD_FOLDER = r'C:\Users\renan\Desktop\img'
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png'}
 MAX_FILES = 10000
 
@@ -90,6 +90,11 @@ def postar_noticia():
 
     uploaded_files = request.files.getlist("files[]")
     imagens_salvas = []
+
+    # Verifica se o número de arquivos excede o limite
+    if len(uploaded_files) > 10:
+        flash('Você excedeu o limite de 10 imagens por postagem.', 'error')
+        return redirect(url_for('exibir_noticias'))
 
     for file in uploaded_files:
         if file and allowed_file(file.filename):

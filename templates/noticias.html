@@ -48,6 +48,7 @@
     .imagens-noticia {
         display: flex;
         gap: 10px;
+        flex-wrap: wrap; /* Adicione esta linha para permitir que as imagens quebrem para uma nova linha */
     }
 
     .imagem-noticia {
@@ -56,6 +57,7 @@
         object-fit: cover;
         cursor: pointer;
         transition: transform 0.3s;
+        flex-shrink: 0; /* Adicione esta linha para garantir que as imagens não sejam reduzidas em tamanho */
     }
 
     .imagem-noticia.clicked {
